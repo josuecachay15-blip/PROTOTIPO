@@ -83,10 +83,62 @@ export const TRIAGE_FLOW: Record<string, TriageStep> = {
     id: 'corrupcion',
     question: '¿Cuál es la naturaleza del acto irregular?',
     options: [
-      { label: 'Solicitud de beneficio/coima (Cohecho)', result: 'Cohecho (Art. 393-398 CP)', classification: 'Grave' },
-      { label: 'Uso indebido de fondos/recursos (Peculado)', result: 'Peculado (Art. 387 CP)', classification: 'Grave' },
-      { label: 'Abuso de autoridad / Discriminación', result: 'Abuso de Autoridad (Art. 376 CP)', classification: 'Moderado' },
-      { label: 'Tráfico de influencias / Nepotismo', result: 'Tráfico de Influencias (Art. 400 CP)', classification: 'Muy Grave' }
+      { 
+        label: 'Solicitud de beneficio/coima (Cohecho)', 
+        result: 'Cohecho Pasivo Propio', 
+        classification: 'Muy Grave',
+        resultDetails: {
+          article: 'Art. 393 - 398 Código Penal',
+          pena: '4 a 6 años',
+          destination: 'Fiscalía Anticorrupción (FECOR)',
+          competencia: 'CGR + Ministerio Público',
+          convencion: 'CICC · UNCAC (ONU)',
+          action: 'Denunciar ante Tribunal SERVIR / PNP',
+          documentation: 'Conservar vouchers, grabaciones y chats'
+        }
+      },
+      { 
+        label: 'Uso indebido de fondos/recursos (Peculado)', 
+        result: 'Peculado Doloso', 
+        classification: 'Grave',
+        resultDetails: {
+          article: 'Art. 387 Código Penal',
+          pena: '4 a 8 años',
+          destination: 'Contraloría (CGR) + FECOR',
+          competencia: 'Ministerio Público',
+          convencion: 'Convención ONU contra la Corrupción',
+          action: 'Reportar a la OCI de la Institución',
+          documentation: 'Recopilar documentos, facturas o guías'
+        }
+      },
+      { 
+        label: 'Abuso de autoridad / Discriminación', 
+        result: 'Abuso de Autoridad', 
+        classification: 'Moderado',
+        resultDetails: {
+          article: 'Art. 376 Código Penal',
+          pena: 'No mayor de 3 años',
+          destination: 'Defensoría del Pueblo + Fiscalía',
+          competencia: 'Poder Judicial',
+          convencion: 'Pacto de San José (DDHH)',
+          action: 'Queja formal ante Inspectoría',
+          documentation: 'Testigos y registro audiovisual del acto'
+        }
+      },
+      { 
+        label: 'Tráfico de influencias / Nepotismo', 
+        result: 'Tráfico de Influencias', 
+        classification: 'Muy Grave',
+        resultDetails: {
+          article: 'Art. 400 Código Penal / Ley 26771',
+          pena: '4 a 6 años',
+          destination: 'Fiscalía Especializada FECOR',
+          competencia: 'Contraloría General de la República',
+          convencion: 'CICC (OEA)',
+          action: 'Denunciar ante Auditoría Interna',
+          documentation: 'Pruebas de vínculo o registro de llamadas'
+        }
+      }
     ]
   },
   patrimonio: {
@@ -101,16 +153,96 @@ export const TRIAGE_FLOW: Record<string, TriageStep> = {
     id: 'robo_armas',
     question: '¿Se utilizaron armas (fuego, blanca)?',
     options: [
-      { label: 'Sí', result: 'Robo Agravado (Art. 189 CP)', classification: 'Grave' },
-      { label: 'No', result: 'Robo (Art. 188 CP)', classification: 'Moderado' }
+      { 
+        label: 'Sí', 
+        result: 'Robo Agravado', 
+        classification: 'Crítico',
+        resultDetails: {
+          article: 'Art. 189 Código Penal',
+          pena: '12 a 20 años',
+          destination: 'Comisaría / DEPINCRI',
+          competencia: 'Fiscalía Penal',
+          action: 'Denuncia por flagrancia inmediata',
+          documentation: 'Evidencia física y grabaciones CCTV'
+        }
+      },
+      { 
+        label: 'No', 
+        result: 'Robo Simple', 
+        classification: 'Grave',
+        resultDetails: {
+          article: 'Art. 188 Código Penal',
+          pena: '3 a 8 años',
+          destination: 'Policía Nacional (PNP)',
+          competencia: 'Ministerio Público',
+          action: 'Sentar denuncia preventiva',
+          documentation: 'Testimonios de terceros'
+        }
+      }
     ]
   },
   hurto_valor: {
     id: 'hurto_valor',
     question: '¿El valor de lo sustraído supera una Remuneración Mínima Vital?',
     options: [
-      { label: 'Sí', result: 'Hurto simple (Art. 185 CP)', classification: 'Leve' },
-      { label: 'No', result: 'Falta contra el patrimonio', classification: 'Falta' }
+      { 
+        label: 'Sí', 
+        result: 'Hurto Simple', 
+        classification: 'Moderado',
+        resultDetails: {
+          article: 'Art. 185 Código Penal',
+          pena: '1 a 3 años',
+          destination: 'Fiscalía / Comisaría',
+          competencia: 'Poder Judicial',
+          action: 'Interponer denuncia escrita',
+          documentation: 'Facturas de los bienes sustraídos'
+        }
+      },
+      { 
+        label: 'No', 
+        result: 'Falta contra el patrimonio', 
+        classification: 'Falta',
+        resultDetails: {
+          article: 'Art. 444 Código Penal',
+          pena: 'Prestación de servicios comunitarios',
+          destination: 'Juzgado de Paz Letrado',
+          competencia: 'Poder Judicial',
+          action: 'Proceso por faltas',
+          documentation: 'Identificación del infractor'
+        }
+      }
+    ]
+  },
+  integridad: {
+    id: 'integridad',
+    question: '¿Cuál es el estado de la víctima?',
+    options: [
+      { 
+        label: 'Lesiones leves/Contusiones', 
+        result: 'Lesiones Leves', 
+        classification: 'Moderado',
+        resultDetails: {
+          article: 'Art. 122 Código Penal',
+          pena: '2 a 5 años',
+          destination: 'Comisaría / Medicina Legal',
+          competencia: 'Juez Penal',
+          action: 'Pasar Reconocimiento Médico',
+          documentation: 'Certificado de medicina legal'
+        }
+      },
+      { 
+        label: 'Lesiones graves/Incapacidad', 
+        result: 'Lesiones Graves', 
+        classification: 'Urgente',
+        resultDetails: {
+          article: 'Art. 121 Código Penal',
+          pena: '4 a 8 años',
+          destination: 'Fiscalía Penal',
+          competencia: 'Ministerio Público',
+          action: 'Asegurar atención y peritaje',
+          documentation: 'Historia clínica detallada'
+        }
+      }
     ]
   }
 };

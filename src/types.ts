@@ -26,6 +26,15 @@ export interface TriageStep {
     label: string;
     nextStepId?: string;
     result?: string;
+    resultDetails?: {
+      article?: string;
+      pena?: string;
+      destination?: string;
+      competencia?: string;
+      convencion?: string;
+      action?: string;
+      documentation?: string;
+    };
     classification?: string;
   }[];
 }

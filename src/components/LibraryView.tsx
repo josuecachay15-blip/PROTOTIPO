@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { 
   Search, 
   Book, 
@@ -29,9 +30,12 @@ export default function LibraryView() {
 
   return (
     <div className="space-y-6 py-4">
-      <section>
-        <h2 className="text-3xl font-bold text-white mb-1 font-serif italic">Codex Jurídico</h2>
-        <p className="text-white/40 text-[10px] uppercase tracking-[0.2em] font-bold">Biblioteca de consulta Offline</p>
+      <section className="flex justify-between items-start">
+        <div>
+          <h2 className="text-3xl font-bold text-white mb-1 font-serif italic">Codex Jurídico</h2>
+          <p className="text-white/40 text-[10px] uppercase tracking-[0.2em] font-bold">Biblioteca de consulta Offline</p>
+        </div>
+        <OfficialLinks />
       </section>
 
       {/* Search Bar */}
@@ -115,6 +119,73 @@ export default function LibraryView() {
           </div>
         )}
       </div>
+    </div>
+  );
+}
+
+function OfficialLinks() {
+  const [isOpen, setIsOpen] = useState(false);
+  
+  const links = [
+    { name: 'Constitución Política del Perú', url: 'https://www.tc.gob.pe/wp-content/uploads/2021/05/Constitucion-Politica-del-Peru-1993.pdf' },
+    { name: 'Código Penal', url: 'https://lpderecho.pe/codigo-penal-peruano-actualizado/' },
+    { name: 'Código Civil', url: 'https://spijweb.minjus.gob.pe/sdm_downloads/codigo-civil-decimo-sexta-edicion-oficial/' },
+    { name: 'Ley 30057 - Ley del Servicio Civil', url: 'https://www.gob.pe/institucion/congreso-de-la-republica/normas-legales/118474-30057' },
+    { name: 'Leyes Anticorrupción (CGR)', url: 'https://www.gob.pe/institucion/congreso-de-la-republica/normas-legales/361328-27785' }
+  ];
+
+  return (
+    <div className="relative">
+      <button 
+        onClick={() => setIsOpen(!isOpen)}
+        className={cn(
+          "w-12 h-12 rounded-xl flex items-center justify-center transition-all border shadow-lg",
+          isOpen 
+            ? "bg-legal-gold border-legal-gold text-legal-navy" 
+            : "bg-white/5 border-white/10 text-white/40 hover:text-legal-gold hover:border-legal-gold/50"
+        )}
+      >
+        <Book size={20} className={cn("transition-transform duration-300", isOpen ? "scale-110" : "scale-100")} />
+      </button>
+
+      <AnimatePresence>
+        {isOpen && (
+          <>
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsOpen(false)}
+              className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm"
+            />
+            <motion.div 
+              initial={{ opacity: 0, y: 10, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 10, scale: 0.95 }}
+              className="absolute right-0 mt-3 w-72 bg-black/90 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl z-50 overflow-hidden"
+            >
+              <div className="p-4 border-b border-white/10">
+                <h4 className="text-[10px] font-bold text-white uppercase tracking-widest">Fuentes Oficiales</h4>
+                <p className="text-[8px] text-white/30 uppercase tracking-widest mb-0 font-bold">Enlaces Legales SPIJ / El Peruano</p>
+              </div>
+              <div className="p-2 space-y-1">
+                {links.map((link, idx) => (
+                  <a 
+                    key={idx}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between p-3 bg-white/5 hover:bg-legal-gold/10 rounded-xl text-[10px] text-white/70 hover:text-legal-gold transition-all group"
+                  >
+                    <span className="font-bold truncate max-w-[200px]">{link.name}</span>
+                    <ExternalLink size={10} className="opacity-40 group-hover:opacity-100" />
+                  </a>
+                ))}
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

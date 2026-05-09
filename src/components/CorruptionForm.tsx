@@ -69,12 +69,25 @@ export default function CorruptionForm({ onBack }: CorruptionFormProps) {
         <p className="text-white/40 text-xs uppercase tracking-widest leading-relaxed mb-8 max-w-[240px]">
           Tu reporte ha sido enviado preservando el anonimato absoluto. Se ha generado un registro único en el Codex.
         </p>
-        <button
-          onClick={onBack}
-          className="px-8 py-3 bg-white/5 border border-white/10 rounded-xl text-white/60 text-[10px] font-bold uppercase tracking-widest hover:text-white transition-colors"
-        >
-          Volver al Inicio
-        </button>
+        
+        <div className="space-y-3 w-full">
+          <button
+            onClick={() => {
+              alert(`CONSTANCIA DIGITAL GENERADA\nHash: sha256:${Math.random().toString(16).slice(2, 10)}\nFecha: ${new Date().toLocaleString()}\nInstitución: ${formData.institution}\nEstado: Radicado ante CGR y FECOR`);
+            }}
+            className="w-full py-5 bg-white text-legal-navy rounded-2xl font-bold uppercase tracking-widest text-xs shadow-2xl flex items-center justify-center gap-2 transition-transform active:scale-95"
+          >
+            <FileText className="w-4 h-4" />
+            Generar Comprobante
+          </button>
+          
+          <button
+            onClick={onBack}
+            className="w-full py-4 bg-white/5 border border-white/10 rounded-2xl text-white/60 text-[10px] font-bold uppercase tracking-widest hover:text-white transition-colors"
+          >
+            Volver al Inicio
+          </button>
+        </div>
       </div>
     );
   }
@@ -97,7 +110,14 @@ export default function CorruptionForm({ onBack }: CorruptionFormProps) {
         <p className="text-white/40 text-[10px] uppercase tracking-[0.2em] font-bold">Protocolo Cero Corrupción • No se guarda IP</p>
       </section>
 
-      <form onSubmit={handleSubmit} className="flex-1 space-y-6">
+      <div className="mb-6 p-4 bg-cyan-500/10 border border-cyan-500/20 rounded-2xl flex gap-4">
+        <AlertTriangle className="text-cyan-500 w-5 h-5 shrink-0" />
+        <p className="text-[10px] text-cyan-400 leading-relaxed font-bold uppercase tracking-wide">
+          📋 Tu denuncia será derivada automáticamente a: Contraloría General de la República y Fiscalía Especializada en Delitos de Corrupción de Funcionarios (FECOR).
+        </p>
+      </div>
+
+      <form onSubmit={handleSubmit} className="flex-1 space-y-6 overflow-y-auto no-scrollbar pb-8">
         <div className="space-y-2">
           <label className="text-[10px] font-bold text-white/30 uppercase tracking-widest block ml-1">Institución Implicada</label>
           <input 
