@@ -1,0 +1,103 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 0. Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Helpers ---
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isEmailVerified() {
+      // NOTE: For demo purposes, we might relax this if the user hasn't verified email yet, 
+      // but guidelines mandate strict check.
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      // We look up in a trusted admins collection
+      return isSignedIn() && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    // --- Validation Blueprints ---
+    
+    function isValidUser(data) {
+      return data.keys().hasAll(['email']) &&
+             data.keys().size() <= 10 &&
+             data.email is string && data.email.size() <= 256;
+    }
+
+    function isValidReport(data) {
+      return data.keys().hasAll(['userId', 'status', 'classification']) &&
+             data.userId is string && data.userId.size() <= 128 &&
+             data.status in ['Radicado', 'Asignado', 'Investigación', 'Resolución'] &&
+             data.classification is string && data.classification.size() <= 200 &&
+             (data.get('description', '') is string && data.get('description', '').size() <= 2000) &&
+             (data.get('metadata', null) == null || (
+               data.metadata.keys().hasAll(['timestamp', 'hash', 'gps']) &&
+               data.metadata.timestamp is string &&
+               data.metadata.hash is string &&
+               data.metadata.gps is string
+             ));
+    }
+
+    // --- Collections ---
+
+    match /users/{userId} {
+      allow get: if isOwner(userId) || isAdmin();
+      allow list: if isAdmin();
+      allow create: if isOwner(userId) && isValidUser(incoming()) && incoming().createdAt == request.time;
+      allow update: if isOwner(userId) && isValidUser(incoming()) && 
+                    incoming().diff(existing()).affectedKeys().hasOnly(['displayName', 'photoURL', 'updatedAt', 'email', 'createdAt']) &&
+                    incoming().updatedAt == request.time &&
+                    incoming().createdAt == existing().createdAt;
+    }
+
+    match /reports/{reportId} {
+      allow get: if isSignedIn() && (isOwner(existing().userId) || isAdmin());
+      // Secure List Query: Enforce resource-level identity check
+      allow list: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      
+      allow create: if isSignedIn() && isValidId(reportId) && 
+                    isValidReport(incoming()) && 
+                    isOwner(incoming().userId) &&
+                    incoming().status == 'Radicado' &&
+                    incoming().createdAt == request.time;
+
+      allow update: if isSignedIn() && (
+        isAdmin() ||
+        (isOwner(existing().userId) && 
+         existing().status != 'Resolución' &&
+         isValidReport(incoming()) &&
+         incoming().diff(existing()).affectedKeys().hasOnly(['description', 'updatedAt']) &&
+         incoming().updatedAt == request.time)
+      );
+
+      allow delete: if isAdmin();
+    }
+
+    match /admins/{adminId} {
+      allow read: if isSignedIn(); // Users can check if they are admins via their own doc
+      allow write: if false; 
+    }
+  }
+}

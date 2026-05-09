@@ -1,0 +1,10 @@
+{
+  "name": "LexDefensa",
+  "description": "Plataforma integral de asistencia jurídica y defensa ciudadana con triaje inteligente, gestión de evidencias y biblioteca legal.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone",
+    "geolocation"
+  ],
+  "majorCapabilities": []
+}
