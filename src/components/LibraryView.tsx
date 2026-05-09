@@ -13,7 +13,7 @@ import { cn } from '../lib/utils';
 
 export default function LibraryView() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [activeCode, setActiveCode] = useState<'All' | 'Penal' | 'Civil' | 'Constitución'>('All');
+  const [activeCode, setActiveCode] = useState<'All' | 'Penal' | 'Civil' | 'Constitución' | 'Anticorrupción'>('All');
 
   const filteredArticles = LEGAL_ARTICLES.filter(article => {
     const matchesSearch = 
@@ -21,7 +21,8 @@ export default function LibraryView() {
       article.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
       article.keywords.some(k => k.toLowerCase().includes(searchTerm.toLowerCase()));
     
-    const matchesCode = activeCode === 'All' || article.code === activeCode;
+    // Check if the article code matches or if it's 'Anticorrupción' which might be in content/title
+    const matchesCode = activeCode === 'All' || article.code === activeCode || (activeCode === 'Anticorrupción' && article.keywords.includes('anticorrupción'));
     
     return matchesSearch && matchesCode;
   });
@@ -47,7 +48,7 @@ export default function LibraryView() {
 
       {/* Filter Tabs */}
       <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
-        {['All', 'Penal', 'Civil', 'Constitución'].map((code) => (
+        {['All', 'Penal', 'Constitución', 'Anticorrupción', 'Civil'].map((code) => (
           <button
             key={code}
             onClick={() => setActiveCode(code as any)}
@@ -73,9 +74,10 @@ export default function LibraryView() {
                   "px-2 py-1 rounded text-[8px] font-bold uppercase tracking-[0.2em] border",
                   article.code === 'Penal' ? "bg-red-500/10 text-red-500 border-red-500/20" :
                   article.code === 'Civil' ? "bg-blue-500/10 text-blue-500 border-blue-500/20" :
+                  article.code === 'Anticorrupción' ? "bg-cyan-500/10 text-cyan-500 border-cyan-500/20" :
                   "bg-legal-gold/10 text-legal-gold border-legal-gold/20"
                 )}>
-                  Código {article.code}
+                  {article.code}
                 </div>
                 <h3 className="text-sm font-bold text-white group-hover:text-legal-gold transition-colors">{article.article} - {article.title}</h3>
               </div>

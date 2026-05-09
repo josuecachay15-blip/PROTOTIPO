@@ -5,6 +5,7 @@ import {
   PlusCircle, 
   ShieldCheck, 
   MapPin, 
+  Map as MapIcon,
   ChevronRight,
   AlertCircle,
   FileText,
@@ -12,6 +13,7 @@ import {
   Scale
 } from 'lucide-react';
 import { ViewState } from '../types';
+import { cn } from '../lib/utils';
 import { auth, db } from '../lib/firebase';
 import { collection, query, where, getCountFromServer } from 'firebase/firestore';
 
@@ -67,6 +69,36 @@ export default function HomeView({ onNavigate }: HomeViewProps) {
           <ChevronRight className="text-legal-gold w-6 h-6 opacity-30 group-hover:opacity-100 transition-opacity" />
         </div>
       </motion.button>
+
+      {/* Transparency Modules */}
+      <section className="space-y-4">
+        <h4 className="text-[10px] font-bold text-white/40 uppercase tracking-[0.2em]">Transparencia y Ética</h4>
+        <div className="grid grid-cols-1 gap-4">
+          <ModuleCard 
+            icon={<MapIcon className="text-cyan-500" />}
+            title="Denuncia Aquí"
+            description="Mapa de Irregularidades Administrativas"
+            onClick={() => onNavigate('transparency-map')}
+            color="cyan"
+          />
+          <div className="grid grid-cols-2 gap-4">
+            <ModuleCard 
+              icon={<Search className="text-legal-gold" />}
+              title="Verificador"
+              description="RNSSC Ético"
+              onClick={() => onNavigate('officer-check')}
+              compact
+            />
+            <ModuleCard 
+              icon={<FileText className="text-blue-400" />}
+              title="Acceso Info"
+              description="Ley 27806"
+              onClick={() => onNavigate('info-request')}
+              compact
+            />
+          </div>
+        </div>
+      </section>
 
       {/* Quick Stats */}
       <div className="grid grid-cols-2 gap-4">
@@ -140,5 +172,46 @@ function ActivityItem({ icon, title, status, date }: { icon: React.ReactNode, ti
       </div>
       <p className="text-[10px] text-white/20 font-mono">{date}</p>
     </div>
+  );
+}
+
+function ModuleCard({ 
+  icon, 
+  title, 
+  description, 
+  onClick, 
+  compact = false,
+  color = 'gold'
+}: { 
+  icon: React.ReactNode, 
+  title: string, 
+  description: string, 
+  onClick: () => void,
+  compact?: boolean,
+  color?: 'gold' | 'cyan'
+}) {
+  return (
+    <motion.button
+      whileHover={{ y: -2, backgroundColor: 'rgba(255, 255, 255, 0.08)' }}
+      whileTap={{ scale: 0.98 }}
+      onClick={onClick}
+      className={cn(
+        "w-full text-left bg-white/5 border border-white/10 rounded-2xl transition-all h-full relative overflow-hidden group",
+        compact ? "p-4" : "p-6"
+      )}
+    >
+      <div className={cn("flex flex-col h-full", compact ? "gap-2" : "gap-4")}>
+        <div className={cn(
+          "w-10 h-10 rounded-xl flex items-center justify-center transition-colors shadow-lg",
+          color === 'cyan' ? "bg-cyan-500/10 shadow-cyan-500/10" : "bg-legal-gold/10 shadow-legal-gold/10"
+        )}>
+          {React.cloneElement(icon as React.ReactElement, { className: "w-5 h-5" })}
+        </div>
+        <div>
+          <h5 className="text-[13px] font-bold text-white leading-tight mb-1 group-hover:text-legal-gold transition-colors">{title}</h5>
+          <p className="text-[9px] text-white/40 font-bold uppercase tracking-widest leading-relaxed">{description}</p>
+        </div>
+      </div>
+    </motion.button>
   );
 }

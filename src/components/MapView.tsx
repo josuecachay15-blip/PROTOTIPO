@@ -52,16 +52,16 @@ export default function MapView() {
           <div className="absolute top-1/4 left-1/3 w-80 h-80 bg-red-600/10 rounded-full blur-[100px] animate-pulse"></div>
           <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-amber-600/5 rounded-full blur-[80px]"></div>
 
-          {/* City Arteries (Stylized lines) */}
-          <svg className="absolute inset-0 w-full h-full opacity-[0.03]" viewBox="0 0 1000 1000">
-            <path d="M 0 500 L 1000 500 M 500 0 L 500 1000 M 200 0 L 800 1000 M 0 200 L 1000 800" stroke="white" strokeWidth="2" fill="none" />
-          </svg>
-
           {/* Dynamic Markers */}
           <MapMarker x="45%" y="35%" type="critical" label="Hurto Agravado" time="12 Oct" />
           <MapMarker x="65%" y="60%" type="warning" label="Alerta Perimetral" time="5 min" />
           <MapMarker x="35%" y="75%" type="warning" label="Vigilancia" time="Activo" />
           <MapMarker x="75%" y="25%" type="critical" label="Zona Restringida" time="24h" />
+
+          {/* City Arteries (Stylized lines) */}
+          <svg className="absolute inset-0 w-full h-full opacity-[0.03]" viewBox="0 0 1000 1000">
+            <path d="M 0 500 L 1000 500 M 500 0 L 500 1000 M 200 0 L 800 1000 M 0 200 L 1000 800" stroke="white" strokeWidth="2" fill="none" />
+          </svg>
         </motion.div>
 
         {/* Legend / Overlay */}

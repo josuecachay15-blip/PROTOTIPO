@@ -95,11 +95,12 @@ export default function TrackingView() {
 }
 
 const ReportCard = ({ report }: { report: any }) => {
+  const institution = report.institution || 'Fiscalía de la Nación';
   const steps = [
     { status: 'Radicado', completed: true },
-    { status: 'Asignado', completed: ['Asignado', 'Investigación', 'Resolución'].includes(report.status) },
-    { status: 'Investigación', completed: ['Investigación', 'Resolución'].includes(report.status) },
-    { status: 'Resolución', completed: report.status === 'Resolución' }
+    { status: `Recibido por ${institution}`, completed: ['Asignado', 'Investigación', 'Resolución'].includes(report.status) },
+    { status: 'Investigación / Auditoría', completed: ['Investigación', 'Resolución'].includes(report.status) },
+    { status: 'Resolución Final', completed: report.status === 'Resolución' }
   ];
 
   return (

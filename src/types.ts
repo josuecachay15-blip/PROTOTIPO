@@ -1,10 +1,10 @@
 
-export type ViewState = 'home' | 'triage' | 'evidence' | 'tracking' | 'library' | 'map' | 'emergency';
+export type ViewState = 'home' | 'triage' | 'evidence' | 'tracking' | 'library' | 'map' | 'emergency' | 'corruption-form' | 'officer-check' | 'info-request' | 'transparency-map';
 
 export interface LegalArticle {
   id: string;
   title: string;
-  code: 'Penal' | 'Civil' | 'Constitución';
+  code: 'Penal' | 'Civil' | 'Constitución' | 'Anticorrupción';
   article: string;
   content: string;
   keywords: string[];

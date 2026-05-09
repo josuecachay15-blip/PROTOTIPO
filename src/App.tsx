@@ -27,7 +27,11 @@ import TriageView from './components/TriageView';
 import TrackingView from './components/TrackingView';
 import LibraryView from './components/LibraryView';
 import MapView from './components/MapView';
+import TransparencyMap from './components/TransparencyMap';
 import EmergencyView from './components/EmergencyView';
+import CorruptionForm from './components/CorruptionForm';
+import OfficerCheck from './components/OfficerCheck';
+import InfoRequest from './components/InfoRequest';
 import AuthWrapper from './components/AuthWrapper';
 import { auth } from './lib/firebase';
 import { signOut } from 'firebase/auth';
@@ -42,7 +46,11 @@ export default function App() {
       case 'tracking': return <TrackingView />;
       case 'library': return <LibraryView />;
       case 'map': return <MapView />;
+      case 'transparency-map': return <TransparencyMap onBack={() => setActiveView('home')} onReport={() => setActiveView('corruption-form')} />;
       case 'emergency': return <EmergencyView onBack={() => setActiveView('home')} />;
+      case 'corruption-form': return <CorruptionForm onBack={() => setActiveView('home')} />;
+      case 'officer-check': return <OfficerCheck onBack={() => setActiveView('home')} />;
+      case 'info-request': return <InfoRequest onBack={() => setActiveView('home')} />;
       default: return <HomeView onNavigate={setActiveView} />;
     }
   };
